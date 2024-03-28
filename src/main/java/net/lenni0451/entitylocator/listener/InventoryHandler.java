@@ -53,7 +53,7 @@ public class InventoryHandler implements Listener {
             inventory.clear();
             newInventory = false;
         } else {
-            inventory = Bukkit.createInventory(player, 9 * 6, "§5EntityLocator §7| §aPage " + (page + 1) + "/" + maxPages);
+            inventory = Bukkit.createInventory(player, 9 * 6, "§5EntityLocator §7| §a" + entities.stream().mapToInt(EntityCollection::count).sum() + " Entities");
             newInventory = true;
         }
         for (int i = 0; i < pageEntities.size(); i++) {
