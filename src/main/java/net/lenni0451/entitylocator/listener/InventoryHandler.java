@@ -66,7 +66,7 @@ public class InventoryHandler implements Listener {
             lore.add("§aWorld: §6" + entity.world().getName());
             lore.add("§aChunk: §6" + entity.chunkLocation().x() + "§7/§6" + entity.chunkLocation().z());
             lore.add("§aEntities: §6" + entity.count());
-            lore.add("§aTypes: §6" + String.join("§7, §6", entity.types().stream().map(Enum::name).toList()));
+            lore.add("§aTypes: §6" + String.join("§7, §6", entity.types().stream().map(e -> e.count() + "x " + e.type().name()).toList()));
             meta.setLore(lore);
             item.setItemMeta(meta);
             inventory.setItem(i, item);

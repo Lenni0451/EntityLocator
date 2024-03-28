@@ -1,6 +1,7 @@
 package net.lenni0451.entitylocator;
 
 import net.lenni0451.entitylocator.data.ChunkLocation;
+import net.lenni0451.entitylocator.data.CountedEntity;
 import net.lenni0451.entitylocator.data.EntityCollection;
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
@@ -35,7 +36,17 @@ public class EntityLocator {
     private static List<EntityCollection> collectEntities(final World world, final Map<ChunkLocation, List<Entity>> chunkEntities) {
         List<EntityCollection> entities = new ArrayList<>();
         for (Map.Entry<ChunkLocation, List<Entity>> entry : chunkEntities.entrySet()) {
-            entities.add(new EntityCollection(world, entry.getKey(), entry.getValue().stream().map(Entity::getType).collect(Collectors.toSet()), entry.getValue().size()));
+            List<CountedEntity> countedEntities = entry
+                    .getValue()
+                    .stream()
+                    .collect(Collectors.groupingBy(Entity::getType, Collectors.summingInt(e -> 1)))
+                    .entrySet()
+                    .stream()
+                    .map(e -> new CountedEntity(e.getKey(), e.getValue()))
+                    .sorted((o1, o2) -> Integer.compare(o2.count(), o1.count()))
+                    .toList();
+
+            entities.add(new EntityCollection(world, entry.getKey(), countedEntities, entry.getValue().size()));
         }
         return entities;
     }

@@ -1,9 +1,8 @@
 package net.lenni0451.entitylocator.data;
 
 import org.bukkit.World;
-import org.bukkit.entity.EntityType;
 
-import java.util.Set;
+import java.util.List;
 
-public record EntityCollection(World world, ChunkLocation chunkLocation, Set<EntityType> types, int count) {
+public record EntityCollection(World world, ChunkLocation chunkLocation, List<CountedEntity> types, int count) {
 }
