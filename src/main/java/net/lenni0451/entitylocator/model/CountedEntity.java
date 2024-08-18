@@ -1,4 +1,4 @@
-package net.lenni0451.entitylocator.data;
+package net.lenni0451.entitylocator.model;
 
 import org.bukkit.entity.EntityType;
 

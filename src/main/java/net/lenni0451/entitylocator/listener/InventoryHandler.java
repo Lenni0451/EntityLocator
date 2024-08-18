@@ -1,6 +1,6 @@
 package net.lenni0451.entitylocator.listener;
 
-import net.lenni0451.entitylocator.data.EntityCollection;
+import net.lenni0451.entitylocator.model.EntityCollection;
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.Location;

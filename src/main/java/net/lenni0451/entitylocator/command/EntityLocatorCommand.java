@@ -2,7 +2,7 @@ package net.lenni0451.entitylocator.command;
 
 import net.lenni0451.entitylocator.EntityLocator;
 import net.lenni0451.entitylocator.Main;
-import net.lenni0451.entitylocator.data.EntityCollection;
+import net.lenni0451.entitylocator.model.EntityCollection;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
