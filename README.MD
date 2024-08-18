@@ -1,2 +1,2 @@
 # EntityLocator
-Get a list of all chunks with entities sorted from most to least.
+View entities on the server and perform actions on them.
