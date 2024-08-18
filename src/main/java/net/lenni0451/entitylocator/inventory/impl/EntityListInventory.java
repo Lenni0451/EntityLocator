@@ -28,9 +28,8 @@ public class EntityListInventory extends PagedInventory {
     @Override
     protected void init(Player player, ItemContainer items, int page) {
         List<EntityCollection> slice = this.getPage(this.entities, page);
-        for (int i = 0; i < slice.size(); i++) {
-            EntityCollection entity = slice.get(i);
-            items.set(i, this.createEntityItem(entity), left(() -> {
+        for (EntityCollection entity : slice) {
+            items.add(this.createEntityItem(entity), left(() -> {
                 Chunk chunk = entity.world().getChunkAt(entity.chunkLocation().x(), entity.chunkLocation().z());
                 Location location = chunk.getBlock(0, 0, 0).getLocation();
                 location.add(0.5, chunk.getWorld().getHighestBlockYAt(location) + 1, 0.5);

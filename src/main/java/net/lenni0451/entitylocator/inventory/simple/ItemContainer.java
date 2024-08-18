@@ -58,6 +58,21 @@ public class ItemContainer {
         return this;
     }
 
+    public ItemContainer add(final ItemStack item) {
+        return this.add(item, null);
+    }
+
+    public ItemContainer add(final ItemStack item, @Nullable final ClickListener listener) {
+        for (int i = 0; i < this.items.length; i++) {
+            if (this.items[i] == null) {
+                this.items[i] = item;
+                this.clickListener[i] = listener;
+                break;
+            }
+        }
+        return this;
+    }
+
     public ItemContainer set(final int slot, final ItemStack item) {
         return this.set(slot, item, null);
     }
