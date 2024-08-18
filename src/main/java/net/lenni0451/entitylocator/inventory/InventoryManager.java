@@ -13,22 +13,33 @@ import org.bukkit.inventory.Inventory;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Stack;
 
 public class InventoryManager implements Listener {
 
     private final Map<Player, PlayerInventory> openInventories;
+    private final Map<Player, Stack<PlayerInventory>> inventoryHistory;
 
     public InventoryManager() {
         this.openInventories = new HashMap<>();
+        this.inventoryHistory = new HashMap<>();
     }
 
     public void openInventory(final Player player, final ManagedInventory inventory) {
-        this.closeInventory(player);
+        this.closeInventory(player); //Close the current inventory and all history inventories
+        this.pushInventory(player, inventory); //Push the new inventory
+    }
 
-        Inventory bukkitInventory = Bukkit.createInventory(player, inventory.getRows() * 9, inventory.getTitle());
-        this.openInventories.put(player, new PlayerInventory(inventory, bukkitInventory));
-        inventory.open(bukkitInventory, player);
-        player.openInventory(bukkitInventory);
+    public void pushInventory(final Player player, final ManagedInventory inventory) {
+        if (!this.openInventories.containsKey(player)) { //If the player has no open inventory just open the new one
+            Inventory bukkitInventory = Bukkit.createInventory(player, inventory.getRows() * 9, inventory.getTitle());
+            this.openInventories.put(player, new PlayerInventory(inventory, bukkitInventory));
+            inventory.open(bukkitInventory, player);
+            player.openInventory(bukkitInventory);
+        } else { //If the player has an open inventory, push the current inventory to the history and open the new one
+            this.inventoryHistory.computeIfAbsent(player, k -> new Stack<>()).push(this.openInventories.remove(player));
+            this.pushInventory(player, inventory);
+        }
     }
 
     public void refreshInventory(final Player player) {
@@ -38,12 +49,27 @@ public class InventoryManager implements Listener {
         inventory.inventory.open(inventory.bukkitInventory, player);
     }
 
+    public void popInventory(final Player player) {
+        if (this.openInventories.containsKey(player)) {
+            player.closeInventory();
+            this.openInventories.remove(player).inventory.close(player);
+        }
+        Stack<PlayerInventory> history = this.inventoryHistory.get(player);
+        if (history == null || history.isEmpty()) return;
+
+        PlayerInventory inventory = history.pop();
+        this.openInventories.put(player, inventory);
+        player.openInventory(inventory.bukkitInventory);
+    }
+
     public void closeInventory(final Player player) {
         PlayerInventory inventory = this.openInventories.remove(player);
+        Stack<PlayerInventory> history = this.inventoryHistory.remove(player);
         if (inventory == null) return;
 
         player.closeInventory();
         inventory.inventory.close(player);
+        if (history != null) history.forEach(playerInventory -> playerInventory.inventory.close(player));
     }
 
     public void closeAll() {
@@ -52,13 +78,16 @@ public class InventoryManager implements Listener {
             entry.getValue().inventory.close(entry.getKey());
         }
         this.openInventories.clear();
+
+        for (Map.Entry<Player, Stack<PlayerInventory>> entry : this.inventoryHistory.entrySet()) {
+            entry.getValue().forEach(inventory -> inventory.inventory.close(entry.getKey()));
+        }
+        this.inventoryHistory.clear();
     }
 
     @EventHandler
     public void onInventoryClose(InventoryCloseEvent event) {
-        PlayerInventory inventory = this.openInventories.remove(event.getPlayer());
-        if (inventory == null) return;
-        inventory.inventory.close((Player) event.getPlayer());
+        this.closeInventory((Player) event.getPlayer());
     }
 
     @EventHandler
