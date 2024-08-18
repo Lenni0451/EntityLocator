@@ -1,7 +1,7 @@
 package net.lenni0451.entitylocator;
 
 import net.lenni0451.entitylocator.command.EntityLocatorCommand;
-import net.lenni0451.entitylocator.listener.InventoryHandler;
+import net.lenni0451.entitylocator.inventory.InventoryManager;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -14,20 +14,25 @@ public class Main extends JavaPlugin {
     }
 
 
-    private InventoryHandler inventoryHandler;
+    private InventoryManager inventoryManager;
 
     @Override
     public void onEnable() {
         instance = this;
 
-        this.inventoryHandler = new InventoryHandler();
+        this.inventoryManager = new InventoryManager();
 
-        Bukkit.getPluginManager().registerEvents(this.inventoryHandler, this);
+        Bukkit.getPluginManager().registerEvents(this.inventoryManager, this);
         this.getCommand("entitylocator").setExecutor(new EntityLocatorCommand());
     }
 
-    public InventoryHandler getInventoryHandler() {
-        return this.inventoryHandler;
+    @Override
+    public void onDisable() {
+        this.inventoryManager.closeAll();
+    }
+
+    public InventoryManager getInventoryManager() {
+        return this.inventoryManager;
     }
 
 }

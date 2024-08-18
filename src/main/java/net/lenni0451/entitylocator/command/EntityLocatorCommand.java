@@ -2,6 +2,7 @@ package net.lenni0451.entitylocator.command;
 
 import net.lenni0451.entitylocator.EntityLocator;
 import net.lenni0451.entitylocator.Main;
+import net.lenni0451.entitylocator.inventory.impl.EntityListInventory;
 import net.lenni0451.entitylocator.model.EntityCollection;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -31,7 +32,7 @@ public class EntityLocatorCommand implements CommandExecutor, Listener {
         }
 
         List<EntityCollection> entities = EntityLocator.locateEntities();
-        Main.getInstance().getInventoryHandler().openInventory(player, entities);
+        Main.getInstance().getInventoryManager().openInventory(player, new EntityListInventory(entities));
         return true;
     }
 
