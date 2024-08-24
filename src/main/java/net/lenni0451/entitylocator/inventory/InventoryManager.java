@@ -51,8 +51,9 @@ public class InventoryManager implements Listener {
 
     public void popInventory(final Player player) {
         if (this.openInventories.containsKey(player)) {
+            PlayerInventory inventory = this.openInventories.remove(player);
             player.closeInventory();
-            this.openInventories.remove(player).inventory.close(player);
+            inventory.inventory.close(player);
         }
         Stack<PlayerInventory> history = this.inventoryHistory.get(player);
         if (history == null || history.isEmpty()) return;
