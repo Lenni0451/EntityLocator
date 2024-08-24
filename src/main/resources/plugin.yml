@@ -2,7 +2,7 @@ name: "EntityLocator"
 author: "Lenni0451"
 version: "${version}"
 main: "net.lenni0451.entitylocator.Main"
-api-version: "1.13"
+api-version: "1.14"
 
 commands:
   entitylocator:
@@ -13,4 +13,4 @@ commands:
 permissions:
   entitylocator.use:
     description: "Permission to use the EntityLocator plugin"
-    default: op
+    default: "op"
