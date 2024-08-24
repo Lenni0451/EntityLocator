@@ -8,6 +8,7 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryDragEvent;
 import org.bukkit.event.inventory.InventoryMoveItemEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.Inventory;
 
 import java.util.HashMap;
@@ -33,9 +34,9 @@ public class InventoryManager implements Listener {
     public void pushInventory(final Player player, final ManagedInventory inventory) {
         if (!this.openInventories.containsKey(player)) { //If the player has no open inventory just open the new one
             Inventory bukkitInventory = Bukkit.createInventory(player, inventory.getRows() * 9, inventory.getTitle());
-            this.openInventories.put(player, new PlayerInventory(inventory, bukkitInventory));
             inventory.open(bukkitInventory, player);
             player.openInventory(bukkitInventory);
+            this.openInventories.put(player, new PlayerInventory(inventory, bukkitInventory));
         } else { //If the player has an open inventory, push the current inventory to the history and open the new one
             this.inventoryHistory.computeIfAbsent(player, k -> new Stack<>()).push(this.openInventories.remove(player));
             this.pushInventory(player, inventory);
@@ -65,7 +66,7 @@ public class InventoryManager implements Listener {
 
     public void closeInventory(final Player player) {
         PlayerInventory inventory = this.openInventories.remove(player);
-        Stack<PlayerInventory> history = this.inventoryHistory.remove(player);
+        Stack<PlayerInventory> history = this.inventoryHistory.get(player);
         if (inventory == null) return;
 
         player.closeInventory();
@@ -116,6 +117,12 @@ public class InventoryManager implements Listener {
         if (inventory == null) return;
 
         event.setCancelled(true);
+    }
+
+    @EventHandler
+    public void onPlayerQuit(PlayerQuitEvent event) {
+        this.closeInventory(event.getPlayer());
+        this.inventoryHistory.remove(event.getPlayer());
     }
 
 
