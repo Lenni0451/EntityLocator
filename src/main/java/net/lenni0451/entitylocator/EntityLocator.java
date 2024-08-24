@@ -39,13 +39,12 @@ public class EntityLocator {
             List<CountedEntity> countedEntities = entry
                     .getValue()
                     .stream()
-                    .collect(Collectors.groupingBy(Entity::getType, Collectors.summingInt(e -> 1)))
+                    .collect(Collectors.groupingBy(Entity::getType, Collectors.toList()))
                     .entrySet()
                     .stream()
                     .map(e -> new CountedEntity(e.getKey(), e.getValue()))
-                    .sorted((o1, o2) -> Integer.compare(o2.count(), o1.count()))
+                    .sorted((o1, o2) -> Integer.compare(o2.entities().size(), o1.entities().size()))
                     .toList();
-
             entities.add(new EntityCollection(world, entry.getKey(), countedEntities, entry.getValue().size()));
         }
         return entities;

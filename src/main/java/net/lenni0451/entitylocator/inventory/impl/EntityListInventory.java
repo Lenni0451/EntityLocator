@@ -1,18 +1,15 @@
 package net.lenni0451.entitylocator.inventory.impl;
 
+import net.lenni0451.entitylocator.Main;
 import net.lenni0451.entitylocator.inventory.simple.ItemContainer;
 import net.lenni0451.entitylocator.inventory.simple.PagedInventory;
 import net.lenni0451.entitylocator.model.EntityCollection;
 import net.lenni0451.entitylocator.utils.ItemBuilder;
-import org.bukkit.Chunk;
-import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.List;
-
-import static net.lenni0451.entitylocator.inventory.simple.ClickListener.left;
 
 public class EntityListInventory extends PagedInventory {
 
@@ -29,12 +26,12 @@ public class EntityListInventory extends PagedInventory {
     protected void init(Player player, ItemContainer items, int page) {
         List<EntityCollection> slice = this.getPage(this.entities, page);
         for (EntityCollection entity : slice) {
-            items.add(this.createEntityItem(entity), left(() -> {
-                Chunk chunk = entity.world().getChunkAt(entity.chunkLocation().x(), entity.chunkLocation().z());
-                Location location = chunk.getBlock(0, 0, 0).getLocation();
-                location.add(0.5, chunk.getWorld().getHighestBlockYAt(location) + 1, 0.5);
-                player.teleport(location);
-            }));
+            items.add(this.createEntityItem(entity), clickType -> {
+                switch (clickType) {
+                    case LEFT -> entity.teleport(player);
+                    case RIGHT -> Main.getInstance().getInventoryManager().pushInventory(player, new EntityActionInventory(entity));
+                }
+            });
         }
     }
 
@@ -47,7 +44,10 @@ public class EntityListInventory extends PagedInventory {
                         "§aWorld: §6" + entity.world().getName(),
                         "§aChunk: §6" + entity.chunkLocation().x() + "§7/§6" + entity.chunkLocation().z(),
                         "§aEntities: §6" + entity.count(),
-                        "§aTypes: §6" + String.join("§7, §6", entity.types().stream().map(e -> e.count() + "x " + e.type().name()).toList())
+                        "§aTypes: §6" + String.join("§7, §6", entity.entities().stream().map(e -> e.entities().size() + "x " + e.type().name()).toList()),
+                        "",
+                        "§7Left-click to teleport",
+                        "§7Right-click to perform action"
                 )
                 .build();
     }
