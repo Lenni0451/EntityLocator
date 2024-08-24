@@ -7,25 +7,28 @@ import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.World;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 public class EntityLocator {
 
-    public static List<EntityCollection> locateEntities() {
+    public static List<EntityCollection> locateEntities(final Predicate<EntityType> filter) {
         List<EntityCollection> entities = new ArrayList<>();
-        for (World world : Bukkit.getWorlds()) entities.addAll(collectEntities(world, getWorldEntities(world)));
+        for (World world : Bukkit.getWorlds()) entities.addAll(collectEntities(world, getWorldEntities(world, filter)));
         sort(entities);
         return entities;
     }
 
-    private static Map<ChunkLocation, List<Entity>> getWorldEntities(final World world) {
+    private static Map<ChunkLocation, List<Entity>> getWorldEntities(final World world, final Predicate<EntityType> filter) {
         Map<ChunkLocation, List<Entity>> chunkEntities = new HashMap<>();
         for (Entity entity : world.getEntities()) {
+            if (!filter.test(entity.getType())) continue;
             Chunk chunk = entity.getLocation().getChunk();
             ChunkLocation chunkLocation = new ChunkLocation(chunk.getX(), chunk.getZ());
             chunkEntities.computeIfAbsent(chunkLocation, k -> new ArrayList<>()).add(entity);
