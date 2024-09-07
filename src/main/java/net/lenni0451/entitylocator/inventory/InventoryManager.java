@@ -7,7 +7,6 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryDragEvent;
-import org.bukkit.event.inventory.InventoryMoveItemEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.Inventory;
 
@@ -106,14 +105,6 @@ public class InventoryManager implements Listener {
     @EventHandler
     public void onInventoryDrag(InventoryDragEvent event) {
         PlayerInventory inventory = this.openInventories.get(event.getWhoClicked());
-        if (inventory == null) return;
-
-        event.setCancelled(true);
-    }
-
-    @EventHandler
-    public void onInventoryMoveItem(InventoryMoveItemEvent event) {
-        PlayerInventory inventory = this.openInventories.get(event.getDestination().getHolder());
         if (inventory == null) return;
 
         event.setCancelled(true);
