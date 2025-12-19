@@ -8,7 +8,7 @@ import java.util.List;
 
 public record EntityCollection(World world, ChunkLocation chunkLocation, List<CountedEntity> entities, int count) {
 
-    private static final Particle PARTICLE = Particle.REDSTONE;
+    private static final Particle PARTICLE = Particle.DUST;
     private static final int COUNT = 1;
     private static final Object DATA = new Particle.DustOptions(Color.RED, 2);
 

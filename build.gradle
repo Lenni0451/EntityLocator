@@ -1,89 +1,40 @@
 plugins {
     id "java"
-    id "checkstyle"
-}
-
-base {
-    java.toolchain.languageVersion = JavaLanguageVersion.of(17)
-    compileJava.options.encoding = compileTestJava.options.encoding = javadoc.options.encoding = "UTF-8"
-
-    archivesName = project.maven_name ?: rootProject.maven_name
-    group = project.maven_group ?: rootProject.maven_group
-    version = project.maven_version ?: rootProject.maven_version
-}
-
-configurations {
-    include
-
-    implementation.extendsFrom include
-    api.extendsFrom include
+    id "base.java"
+    id "base.checkstyle"
+    id "idea.exclude_run_dir"
 }
 
 repositories {
-    mavenCentral()
     maven {
         name = "lenni0451"
         url = "https://maven.lenni0451.net/everything"
     }
     maven {
-        url = "https://hub.spigotmc.org/nexus/content/repositories/snapshots/"
-
-        content {
-            includeGroup "org.bukkit"
-            includeGroup "org.spigotmc"
-        }
-    }
-    maven {
-        url = "https://oss.sonatype.org/content/repositories/snapshots"
-    }
-    maven {
-        url = "https://oss.sonatype.org/content/repositories/central"
+        name = "spigotdev"
+        url = "https://maven.lenni0451.net/spigotdev"
     }
 }
 
 dependencies {
-    compileOnly "com.google.code.findbugs:jsr305:3.0.2"
-    compileOnly "org.spigotmc:spigot-api:1.14-R0.1-SNAPSHOT"
+    compileOnly libs.findbugs
+    compileOnly libs.jetbrainsAnnotations
+    compileOnly libs.lombok
+    annotationProcessor libs.lombok
+
+    compileOnly libs.spigot
 }
 
 processResources {
-    //Config file: "version: ${version}"
+    var projectMavenVersion = project.maven_version
+
     inputs.properties(
-            "version": project.maven_version
+            "version": projectMavenVersion
     )
 
     filesMatching("plugin.yml") {
         expand(
-                "version": project.maven_version
+                "version": projectMavenVersion
         )
     }
 }
-
-jar {
-    dependsOn configurations.include
-    from {
-        duplicatesStrategy = DuplicatesStrategy.EXCLUDE
-        configurations.include.collect {
-            zipTree(it)
-        }
-    } {
-        exclude "META-INF/*.RSA", "META-INF/*.SF", "META-INF/*.DSA"
-    }
-
-    manifest {
-        attributes(
-                "Main-Class": "net.lenni0451.gradletemplate.Main",
-                "Multi-Release": "true"
-        )
-    }
-}
-
-checkstyle {
-    toolVersion = "9.3"
-    configFile = rootProject.file("config/checkstyle/checkstyle.xml")
-}
-
-project.tasks.withType(PublishToMavenRepository).forEach {
-    it.dependsOn(project.tasks.withType(Sign))
-}
-build.dependsOn(check)

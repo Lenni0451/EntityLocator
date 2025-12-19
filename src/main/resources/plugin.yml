@@ -2,7 +2,7 @@ name: "EntityLocator"
 author: "Lenni0451"
 version: "${version}"
 main: "net.lenni0451.entitylocator.Main"
-api-version: "1.14"
+api-version: "1.21"
 
 commands:
   entitylocator:
