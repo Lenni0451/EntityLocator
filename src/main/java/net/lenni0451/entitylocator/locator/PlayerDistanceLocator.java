@@ -27,7 +27,7 @@ public class PlayerDistanceLocator {
             }
             result.add(new NearbyEntities(player, mergeEntities(entitiesNearby)));
         }
-        result.sort(Comparator.comparingInt((NearbyEntities o) -> o.entities().size()).reversed());
+        result.sort(Comparator.comparingInt((NearbyEntities o) -> o.entities().stream().mapToInt(c -> c.entities().size()).sum()).reversed());
         return result;
     }
 
