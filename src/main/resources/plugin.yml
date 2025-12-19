@@ -9,6 +9,10 @@ commands:
     description: "Main command for the EntityLocator plugin"
     usage: "/entitylocator"
     permission: "entitylocator.use"
+  entitydump:
+    description: "Dump all entities in the world to a file"
+    usage: "/entitydump"
+    permission: "entitylocator.use"
 
 permissions:
   entitylocator.use:
