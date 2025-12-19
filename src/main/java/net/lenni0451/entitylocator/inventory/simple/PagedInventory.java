@@ -37,12 +37,11 @@ public abstract class PagedInventory extends SimpleInventory {
         boolean hasPrevious = page > 0;
         boolean hasNext = page < this.pageCount - 1;
         if (hasPrevious) {
-            String name = "§aPrevious Page";
+            String name = "§aPrevious Page §7(" + page + "/" + this.pageCount + ")";
             int amount;
             if (page <= 64) {
                 amount = page;
             } else {
-                name += " §7(" + page + "/" + this.pageCount + ")";
                 amount = 1;
             }
             items.set(this.getRows() * 9 - 9, ItemBuilder.create(Material.ARROW).name(name).amount(amount).build(), left(() -> {
@@ -51,12 +50,11 @@ public abstract class PagedInventory extends SimpleInventory {
             }));
         }
         if (hasNext) {
-            String name = "§aNext Page";
+            String name = "§aNext Page §7(" + (page + 2) + "/" + this.pageCount + ")";
             int amount;
             if ((page + 2) <= 64) {
                 amount = page + 2;
             } else {
-                name += " §7(" + (page + 2) + "/" + this.pageCount + ")";
                 amount = 1;
             }
             items.set(this.getRows() * 9 - 1, ItemBuilder.create(Material.ARROW).name(name).amount(amount).build(), left(() -> {
