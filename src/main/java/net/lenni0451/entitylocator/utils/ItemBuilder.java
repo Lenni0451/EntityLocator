@@ -1,7 +1,7 @@
 package net.lenni0451.entitylocator.utils;
 
 import org.bukkit.Material;
-import org.bukkit.enchantments.Enchantment;
+import org.bukkit.Registry;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -58,7 +58,7 @@ public class ItemBuilder {
         itemMeta.addItemFlags(ItemFlag.values());
         if (this.name != null) itemMeta.setDisplayName(this.name);
         if (this.lore != null) itemMeta.setLore(this.lore);
-        if (this.glow) itemMeta.addEnchant(Enchantment.values()[0], 1, true);
+        if (this.glow) itemMeta.addEnchant(Registry.ENCHANTMENT.iterator().next(), 1, true);
 
         itemStack.setItemMeta(itemMeta);
         return itemStack;
