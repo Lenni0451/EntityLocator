@@ -6,13 +6,16 @@ api-version: "1.21"
 
 commands:
   entitylocator:
-    description: "Main command for the EntityLocator plugin"
-    usage: "/entitylocator"
+    description: "Show a list of all entities in a by-chunk basis"
+    usage: "/entitylocator [+type|-type]..."
     permission: "entitylocator.use"
   entitydump:
     description: "Dump all entities in the world to a file"
     usage: "/entitydump"
     permission: "entitylocator.use"
+  playerlocator:
+    description: "Show a list of all players and nearby entities"
+    usage: "/playerlocator"
 
 permissions:
   entitylocator.use:

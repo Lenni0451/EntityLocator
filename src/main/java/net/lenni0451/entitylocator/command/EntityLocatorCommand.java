@@ -1,8 +1,8 @@
 package net.lenni0451.entitylocator.command;
 
-import net.lenni0451.entitylocator.EntityLocator;
 import net.lenni0451.entitylocator.Main;
 import net.lenni0451.entitylocator.inventory.impl.EntityListInventory;
+import net.lenni0451.entitylocator.locator.PerChunkLocator;
 import net.lenni0451.entitylocator.model.EntityCollection;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -51,7 +51,7 @@ public class EntityLocatorCommand implements CommandExecutor, TabCompleter {
             else blacklist.add(entityType);
         }
 
-        List<EntityCollection> entities = EntityLocator.locateEntities(entityType -> {
+        List<EntityCollection> entities = PerChunkLocator.locateEntities(entityType -> {
             if (!whitelist.isEmpty() && !whitelist.contains(entityType)) return false;
             return !blacklist.contains(entityType);
         });

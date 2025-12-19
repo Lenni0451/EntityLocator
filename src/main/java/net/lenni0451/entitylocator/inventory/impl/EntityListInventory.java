@@ -18,7 +18,11 @@ public class EntityListInventory extends PagedInventory {
     private final List<EntityCollection> entities;
 
     public EntityListInventory(final List<EntityCollection> entities) {
-        super("§5EntityLocator §7| §a" + entities.stream().mapToInt(EntityCollection::count).sum() + " Entities", 6, (int) Math.ceil((double) entities.size() / ITEMS_PER_PAGE));
+        super(
+                "§5EntityLocator §7| §a" + entities.stream().mapToInt(EntityCollection::count).sum() + " Entities",
+                6,
+                (int) Math.ceil((double) entities.size() / ITEMS_PER_PAGE)
+        );
         this.entities = entities;
     }
 
